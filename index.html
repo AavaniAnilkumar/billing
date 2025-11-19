@@ -516,85 +516,49 @@ function downloadInvoice() {
     link.click();
 }
 
-// function shareInvoice() {
-//     const invoiceNo = document.getElementById("showInvoiceNo").textContent;
-//     const totalAmount = document.getElementById("showTotal").textContent;
-
-//     const message = 
-// `📄 *Invoice Details*
-// Invoice No: ${invoiceNo}
-// Total Amount: ₹${totalAmount}
-
-// Thank you for your business!
-// SGK Solutions`;
-
-//     /* -------- WHATSAPP SHARE -------- */
-//     const whatsappURL = `https://wa.me/?text=${encodeURIComponent(message)}`;
-
-//     /* -------- EMAIL SHARE -------- */
-//     const emailSubject = `Invoice - ${invoiceNo}`;
-//     const emailBody = message;
-//     const emailURL = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-
-//     // Create a small popup with 2 share options
-//     const options = `
-//         WhatsApp: ${whatsappURL}
-//         Email: ${emailURL}
-//     `;
-
-//     // Auto open options
-//     let choice = confirm("Click OK to share via WhatsApp.\nClick Cancel to share via Email.");
-
-//     if (choice) {
-//         window.open(whatsappURL, "_blank");
-//     } else {
-//         window.location.href = emailURL;
-//     }
-// }
-
-
-
 
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-async function shareInvoice() {
-    // Select invoice preview
-    const invoiceElement = document.getElementById("invoicePreview");
-
-    // Convert HTML to canvas image
-    const canvas = await html2canvas(invoiceElement, { scale: 2 });
-    const imgData = canvas.toDataURL("image/jpeg", 1.0);
-
-    // Create PDF
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-
-    // Download PDF automatically
-    pdf.save("invoice.pdf");
-
-    // WhatsApp (cannot attach file automatically)
-    const invoiceNo = document.getElementById("showInvoiceNo").textContent;
-    const totalAmount = document.getElementById("showTotal").textContent;
-
-    const message =
-`📄 *Invoice Ready*
-Invoice No: ${invoiceNo}
-Amount: ₹${totalAmount}
-
-Your PDF is downloaded. Please attach it below.`;
-
-    const whatsappURL = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappURL, "_blank");
+<style>
+    @media print {
+  .download-print,
+  .status-section {
+    display: none !important;
+  }
 }
-</script>
 
+</style>
+<script>
+    function shareInvoice() {
+    const shareBtn = document.querySelector(".download-print");
+
+    // Hide sections not needed in PDF
+    document.querySelector(".download-print").style.display = "none";
+    document.querySelector(".status-section").style.display = "none";
+
+    html2canvas(document.body, { scale: 2 }).then(canvas => {
+        canvas.toBlob(blob => {
+            const file = new File([blob], "invoice.pdf", { type: "application/pdf" });
+
+            // Show buttons back
+            document.querySelector(".download-print").style.display = "block";
+            document.querySelector(".status-section").style.display = "flex";
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                navigator.share({
+                    files: [file],
+                    title: "Invoice",
+                    text: "Please find your invoice attached."
+                });
+            } else {
+                // WhatsApp Web fallback
+                alert("WhatsApp Web does not allow automatic PDF attachment.\n\nPlease send manually.");
+            }
+        });
+    });
+}
+
+</script>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </html>
