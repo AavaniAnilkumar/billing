@@ -6,303 +6,110 @@
 <title>SGK Solutions</title>
 
 <style>
-/* ---------- FONT ---------- */
+/* ------- YOUR ORIGINAL STYLE (UNTOUCHED) -------- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { margin: 0; background: linear-gradient(135deg, #dff1ff, #ffffff); display: flex; justify-content: center; align-items: flex-start; padding: 30px 10px; min-height: 100vh; }
+.container { width: 100%; max-width: 1000px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 25px 35px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); position: relative; transition: 0.3s; }
+.container:hover { transform: translateY(-3px); }
+h2 { text-align: center; color: #0078d7; font-size: 28px; margin-bottom: 20px; }
+h3 { color: #0078d7; border-bottom: 2px solid #0078d7; padding-bottom: 5px; }
+label { font-weight: 500; color: #333; display: block; margin-top: 10px; }
+input, select, textarea { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ccc; border-radius: 8px; transition: all 0.3s ease; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: #0078d7; box-shadow: 0 0 5px rgba(0,120,215,0.4); }
+.invoice-info, .bill-section, .bottom-section { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; }
+.invoice-info div, .bill-box, .left-options, .totals { width: 48%; }
+.bill-box { background: #f7faff; padding: 15px; border-radius: 10px; border: 1px solid #e3e8ef; }
+.add-item { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #0078d7; padding-top: 10px; margin-top: 25px; }
+.add-item button, .save-btn button, .download-print button { background: linear-gradient(135deg, #0078d7, #00a6ff); color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 500; }
+.add-item button:hover, .save-btn button:hover, .download-print button:hover { background: linear-gradient(135deg, #005fa3, #008bce); transform: scale(1.05); }
+.add-item button { padding: 10px 18px; }
+/* Table */
+.table-wrapper { width: 100%; overflow-x: auto; margin-top: 20px; }
+table { width: 100%; border-collapse: collapse; min-width: 700px; }
+th, td { border: 1px solid #e1e1e1; padding: 10px; text-align: center; }
+th { background: #0078d7; color: white; }
+tr:nth-child(even) { background: #f7faff; }
+.save-btn button { width: 100%; padding: 10px 20px; margin-top: 15px; font-size: 16px; }
+.summary { display: flex; justify-content: space-between; font-size: 16px; width: 100%; max-width: 300px; margin-top: 8px; }
+.summary.total { font-weight: bold; color: #0078d7; border-top: 2px solid #0078d7; padding-top: 10px; font-size: 18px; }
 
-/* ---------- THEME COLORS ---------- */
-:root {
-  --emerald: #006A4E;
-  --emerald-light: #0B8A70;
-  --emerald-pale: #E8FFF7;
-  --emerald-border: #C4EDE1;
-}
-
-/* ---------- BACKGROUND ---------- */
-body {
-  margin: 0;
-  background: linear-gradient(135deg, #e8fff3, #ffffff);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 30px 10px;
-  min-height: 100vh;
-}
-
-/* ---------- MAIN CONTAINER ---------- */
-.container {
-  width: 100%;
-  max-width: 1000px;
-  background: #fcfdf7;
-  border: 1px solid var(--emerald-border);
-  padding: 25px 35px;
-  border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  transition: 0.3s;
-}
-
-.container:hover {
-  transform: translateY(-3px);
-}
-
-/* ---------- HEADERS ---------- */
-h2 {
-  text-align: center;
-  color: var(--emerald);
-  font-size: 28px;
-  margin-bottom: 20px;
-}
-
-h3 {
-  color: var(--emerald);
-  border-bottom: 2px solid var(--emerald);
-  padding-bottom: 5px;
-}
-
-/* ---------- FORM LABELS + INPUTS ---------- */
-label {
-  font-weight: 500;
-  color: #2d4b3f;
-  display: block;
-  margin-top: 10px;
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  border: 1px solid var(--emerald-border);
-  border-radius: 10px;
-  background: #ffffff;
-  transition: all 0.3s ease;
-}
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--emerald);
-  box-shadow: 0 0 6px rgba(0,106,78,0.3);
-}
-
-/* ---------- FLEX SECTIONS ---------- */
-.invoice-info, .bill-section, .bottom-section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.invoice-info div, .bill-box, .left-options, .totals {
-  width: 48%;
-}
-
-/* ---------- BOXES ---------- */
-.bill-box {
-  background: var(--emerald-pale);
-  border: 1px solid var(--emerald-border);
-  padding: 15px;
-  border-radius: 12px;
-}
-
-/* ---------- ADD ITEM ---------- */
-.add-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 2px solid var(--emerald);
-  padding-top: 10px;
-  margin-top: 25px;
-}
-
-/* ---------- BUTTONS ---------- */
-.add-item button,
-.save-btn button,
-.download-print button {
-  background: var(--emerald);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  padding: 10px 20px;
-  font-weight: 500;
-  transition: 0.3s;
-}
-
-.add-item button:hover,
-.save-btn button:hover,
-.download-print button:hover {
-  background: var(--emerald-light);
-  transform: scale(1.05);
-}
-
-/* ---------- TABLE ---------- */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 20px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 700px;
-  background: white;
-}
-
-th, td {
-  padding: 10px;
-  border: 1px solid var(--emerald-border);
-  text-align: center;
-}
-
-th {
-  background: var(--emerald);
-  color: white;
-}
-
-tr:nth-child(even) {
-  background: #f6fffb;
-}
-
-.save-btn button {
-  width: 100%;
-  margin-top: 15px;
-  font-size: 16px;
-}
-
-/* ---------- TOTALS ---------- */
-.summary {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 300px;
-  font-size: 16px;
-  margin-top: 8px;
-}
-
-.summary.total {
-  font-weight: bold;
-  color: var(--emerald);
-  border-top: 2px solid var(--emerald);
-  padding-top: 10px;
-  font-size: 18px;
-}
-
-/* ---------- INVOICE PREVIEW ---------- */
 #invoicePreview { display: none; }
+.invoice-header { text-align: center; margin-bottom: 15px; }
+.invoice-header h1 { color: #0078d7; font-size: 26px; }
 
-.invoice-header h1 {
-  color: var(--emerald);
-  font-size: 26px;
-}
+.invoice-parties { display: flex; justify-content: space-between; flex-wrap: wrap; }
+.invoice-box { width: 45%; background: #f7faff; padding: 10px 15px; border-radius: 8px; }
 
-/* ---------- PARTY BOXES ---------- */
-.invoice-parties {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
+.status-section { display: flex; align-items: center; justify-content: space-between; background: #f7faff; padding: 10px; border-radius: 8px; margin-top: 20px; }
 
-.invoice-box {
-  width: 45%;
-  background: var(--emerald-pale);
-  border: 1px solid var(--emerald-border);
-  border-radius: 12px;
-  padding: 10px 15px;
-}
+.paid-stamp { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 80px; font-weight: 900; color: rgba(0,128,0,0.2); border: 8px solid rgba(0,128,0,0.4); border-radius: 20px; padding: 40px 80px; text-transform: uppercase; letter-spacing: 10px; display: none; pointer-events: none; z-index: 999; }
 
-/* ---------- STATUS ---------- */
-.status-section {
-  display: flex;
-  justify-content: space-between;
-  background: var(--emerald-pale);
-  padding: 10px;
-  border-radius: 12px;
-  margin-top: 20px;
-}
+.download-print { display: flex; gap: 15px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
 
-/* ---------- PAID STAMP ---------- */
-.paid-stamp {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-30deg);
-  font-size: 80px;
-  font-weight: 900;
-  color: rgba(0,106,78,0.2);
-  border: 8px solid rgba(0,106,78,0.4);
-  border-radius: 20px;
-  padding: 40px 80px;
-  display: none;
-  pointer-events: none;
-  z-index: 999;
-  text-transform: uppercase;
-}
+.header-box { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+.header-logo { height: 80px; width: 80px; object-fit: contain; }
+.header-title { font-size: 32px; font-weight: 600; color: #0078d7; margin: 0; }
 
-/* ---------- QR SECTION ---------- */
-.qr-section {
-  text-align: center;
-  margin-top: 25px;
-}
-
-.qr-section img {
-  width: 230px;
-  height: 230px;
-  border-radius: 10px;
-  border: 3px solid var(--emerald-border);
-}
-
-/* ---------- RESPONSIVE ---------- */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .invoice-info div, .bill-box, .left-options, .totals, .invoice-box {
-    width: 100%;
-  }
+.invoice-info div, .bill-box, .left-options, .totals, .invoice-box { width: 100%; }
+.invoice-parties { flex-direction: column; align-items: center; }
+table { font-size: 14px; }
+th, td { padding: 8px; }
 }
+
+/* ---- ADDED: QR SECTION ---- */
+.qr-section {
+    margin-top: 25px;
+    text-align: center;
+}
+.qr-section img {
+    width: 230px;
+    height: 230px;
+    border-radius: 10px;
+}
+
 </style>
 </head>
+
 <body>
 
-<!-- ==========================================================
-                       BILLING FORM
-========================================================== -->
+<!-- ========================= BILLING FORM ========================= -->
+
 <div class="container" id="billingForm">
 
-<div class="header-box" style="display:flex; align-items:center; gap:15px;">
-<img src="images/SGK LOGOOO.jpg" style="height:80px; width:80px; object-fit:contain;">
-<h2 style="margin:0;">SGK Solutions</h2>
+<div class="header-box">
+<img src="images/SGK LOGOOO.jpg" class="header-logo">
+<h2 class="header-title">SGK Solutions</h2>
 </div>
 
 <div class="invoice-info">
-  <div>
-    <label>Invoice Number:</label>
-    <input type="text" id="invoiceNumber">
-  </div>
-  <div>
-    <label>Due Date:</label>
-    <input type="date" id="dueDate">
-  </div>
+<div><label>Invoice Number:</label><input type="text" id="invoiceNumber"></div>
+<div><label>Due Date:</label><input type="date" id="dueDate"></div>
 </div>
 
 <div class="bill-section">
-  <div class="bill-box">
-    <h3>Bill From</h3>
-    <input type="text" id="fromName" placeholder="Your Name" />
-    <input type="text" id="fromPhone" placeholder="Phone Number" />
-    <input type="email" id="fromEmail" placeholder="Email" />
-    <textarea id="fromAddress" placeholder="Address"></textarea>
-  </div>
+<div class="bill-box">
+<h3>Bill From</h3>
+<input type="text" id="fromName" placeholder="Your Name" />
+<input type="text" id="fromPhone" placeholder="Phone Number" />
+<input type="email" id="fromEmail" placeholder="Email" />
+<textarea id="fromAddress" placeholder="Address"></textarea>
+</div>
 
-  <div class="bill-box">
-    <h3>Bill To</h3>
-    <input type="text" id="toName" placeholder="Client Name" />
-    <input type="text" id="toPhone" placeholder="Phone Number" />
-    <input type="email" id="toEmail" placeholder="Email" />
-    <textarea id="toAddress" placeholder="Address"></textarea>
-  </div>
+<div class="bill-box">
+<h3>Bill To</h3>
+<input type="text" id="toName" placeholder="Client Name" />
+<input type="text" id="toPhone" placeholder="Phone Number" />
+<input type="email" id="toEmail" placeholder="Email" />
+<textarea id="toAddress" placeholder="Address"></textarea>
+</div>
 </div>
 
 <div class="add-item">
-  <h3>Add Items</h3>
-  <button id="addRow">➕ Add Item</button>
+<h3>Add Items</h3>
+<button id="addRow">➕ Add Item</button>
 </div>
 
 <div class="table-wrapper">
@@ -322,9 +129,7 @@ tr:nth-child(even) {
 <label>Payment Mode:</label>
 <select id="paymentMode"><option value="cash">Cash</option><option value="upi">UPI</option></select>
 
-<div class="save-btn">
-<button id="saveInvoice">💾 Save Invoice</button>
-</div>
+<div class="save-btn"><button id="saveInvoice">💾 Save Invoice</button></div>
 </div>
 
 <div class="totals">
@@ -337,13 +142,9 @@ tr:nth-child(even) {
 </div>
 </div>
 
+<!-- ========================= INVOICE PREVIEW ========================= -->
 
-
-<!-- ==========================================================
-                    INVOICE PREVIEW
-========================================================== -->
 <div class="container" id="invoicePreview">
-
 <div class="paid-stamp" id="paidStamp">PAID</div>
 
 <div class="invoice-header">
@@ -368,9 +169,11 @@ tr:nth-child(even) {
 <label>Total:</label><span id="showTotal">0.00</span>
 </div>
 
+<!-- =================== ADDED QR CODE DISPLAY =================== -->
 <div class="qr-section">
 <h3>Scan & Pay</h3>
-<img id="upiQR" src="images/qr.jpeg">
+<img id="upiQR" src="images/qr.jpeg" >
+
 <p><strong>UPI ID:</strong> greeshmanr2255@oksbi</p>
 </div>
 
@@ -386,15 +189,13 @@ tr:nth-child(even) {
 <div class="download-print">
 <button onclick="window.print()">🖨️ Print</button>
 <button onclick="downloadInvoice()">⬇️ Download</button>
-<button onclick="shareInvoice()">📤 Share</button>
-
 </div>
 </div>
 
 <script>
-/* ============================================================
-   ADD ROW + CALCULATE TOTALS
-============================================================ */
+/* ================================================
+   ORIGINAL JS + TOTAL CALCULATION (UNTOUCHED)
+================================================= */
 const addRowBtn = document.getElementById('addRow');
 const table = document.getElementById('itemTable');
 const tbody = table.querySelector('tbody');
@@ -416,10 +217,10 @@ addRowBtn.addEventListener('click', () => {
 <td><select class="discountType"><option value="percentage">%</option><option value="fixed">₹</option></select></td>
 <td><input type="number" class="discount" value="0"></td>
 <td><input type="number" class="tax" value="0"></td>
-<td><input type="text" class="amount" readonly value="0.00"></td>`;
-    
+<td><input type="text" class="amount" readonly value="0.00"></td>
+`;
     tbody.appendChild(row);
-    row.querySelectorAll('input, select').forEach(i => i.addEventListener('input', calculateTotal));
+    row.querySelectorAll('input, select').forEach(input => input.addEventListener('input', calculateTotal));
 });
 
 function calculateTotal() {
@@ -435,11 +236,10 @@ function calculateTotal() {
 
         let total = price * qty;
 
-        if (discountType === "percentage") total -= (total * discount) / 100;
+        if (discountType === 'percentage') total -= (total * discount) / 100;
         else total -= discount;
 
         total += (total * tax) / 100;
-
         row.querySelector('.amount').value = total.toFixed(2);
         subtotal += total;
     });
@@ -452,16 +252,16 @@ function updateGrandTotal() {
     let discount = parseFloat(discountInput.value) || 0;
     let tax = parseFloat(taxInput.value) || 0;
     let shipping = parseFloat(shippingInput.value) || 0;
-
     let total = subtotal - discount + tax + shipping;
     totalEl.textContent = total.toFixed(2);
 }
 
-[discountInput, taxInput, shippingInput].forEach(el => el.addEventListener('input', updateGrandTotal));
+[discountInput, taxInput, shippingInput].forEach(i => i.addEventListener('input', updateGrandTotal));
 
-/* ============================================================
-                   SAVE INVOICE & SHOW PREVIEW
-============================================================ */
+/* ================================
+   SAVE INVOICE + QR GENERATION
+=================================*/
+
 saveInvoiceBtn.addEventListener('click', () => {
 
     document.getElementById('billingForm').style.display = 'none';
@@ -479,7 +279,7 @@ saveInvoiceBtn.addEventListener('click', () => {
     document.getElementById('showTotal').textContent = totalEl.textContent;
 
     const invoiceItems = document.getElementById('showItems');
-    invoiceItems.innerHTML = "";
+    invoiceItems.innerHTML = '';
 
     tbody.querySelectorAll('tr').forEach(r => {
         invoiceItems.innerHTML += `
@@ -493,20 +293,28 @@ saveInvoiceBtn.addEventListener('click', () => {
 </tr>`;
     });
 
-    /* Create UPI QR */
+    /* ==========================
+       GENERATE UPI QR WITH AMOUNT
+    =========================== */
     let amount = totalEl.textContent;
     let upiID = "greeshmanr2255@oksbi";
     let upiURL = `upi://pay?pa=${upiID}&pn=SGK%20Solutions&am=${amount}&cu=INR`;
+
     let qrAPI = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiURL)}`;
+
+
     document.getElementById("upiQR").src = qrAPI;
 });
 
-/* ===== Paid Stamp ===== */
-paymentStatus.addEventListener("change", () => {
-    paidStamp.style.display = paymentStatus.value === "paid" ? "block" : "none";
+/* PAID STAMP */
+const paymentStatus = document.getElementById('paymentStatus');
+const paidStamp = document.getElementById('paidStamp');
+
+paymentStatus.addEventListener('change', () => {
+    paidStamp.style.display = paymentStatus.value === 'paid' ? 'block' : 'none';
 });
 
-/* ===== DOWNLOAD ===== */
+/* DOWNLOAD */
 function downloadInvoice() {
     const content = document.documentElement.outerHTML;
     const blob = new Blob([content], { type: 'text/html' });
@@ -515,50 +323,8 @@ function downloadInvoice() {
     link.download = 'invoice.html';
     link.click();
 }
-
-
 </script>
-<style>
-    @media print {
-  .download-print,
-  .status-section {
-    display: none !important;
-  }
-}
 
-</style>
-<script>
-    function shareInvoice() {
-    const shareBtn = document.querySelector(".download-print");
-
-    // Hide sections not needed in PDF
-    document.querySelector(".download-print").style.display = "none";
-    document.querySelector(".status-section").style.display = "none";
-
-    html2canvas(document.body, { scale: 2 }).then(canvas => {
-        canvas.toBlob(blob => {
-            const file = new File([blob], "invoice.pdf", { type: "application/pdf" });
-
-            // Show buttons back
-            document.querySelector(".download-print").style.display = "block";
-            document.querySelector(".status-section").style.display = "flex";
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({
-                    files: [file],
-                    title: "Invoice",
-                    text: "Please find your invoice attached."
-                });
-            } else {
-                // WhatsApp Web fallback
-                alert("WhatsApp Web does not allow automatic PDF attachment.\n\nPlease send manually.");
-            }
-        });
-    });
-}
-
-</script>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 </html>
+
