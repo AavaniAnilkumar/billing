@@ -393,7 +393,7 @@ tr:nth-child(even) {
 <div class="download-print">
 <button onclick="window.print()">🖨️ Print</button>
 <button onclick="downloadInvoice()">⬇️ Download</button>
-<button id="shareWhatsappBtn">📤 Share on WhatsApp</button>
+<!-- <button id="shareWhatsappBtn">📤 Share on WhatsApp</button> -->
 
 
 </div>
@@ -554,6 +554,10 @@ paymentStatus.addEventListener("change", () => {
     height: auto;
 }
 
+.pdf-hide{
+  display: none !important;
+}
+
 
 </style>
 
@@ -587,6 +591,12 @@ paymentStatus.addEventListener("change", () => {
 // }
 function downloadInvoice(callback) {
     const invoice = document.getElementById("invoicePreview");
+    const qrSection = document.querySelector(".qr-section");
+    const statusSection = document.querySelector(".status-section");
+
+    // Hide sections
+    qrSection.classList.add("pdf-hide");
+    statusSection.classList.add("pdf-hide");
     document.querySelector(".download-print").style.display = "none";
 
     invoice.classList.add("pdf-export");
@@ -616,18 +626,21 @@ function downloadInvoice(callback) {
         .save()
         .then(() => {
             invoice.classList.remove("pdf-export");
+            // Show sections again after export
+            qrSection.classList.remove("pdf-hide");
+            statusSection.classList.remove("pdf-hide");
             document.querySelector(".download-print").style.display = "flex";
             if (callback) callback();
         });
 }
 
 // Share button functionality
-document.getElementById("shareWhatsappBtn").addEventListener("click", () => {
-    downloadInvoice(() => {
-        alert("PDF downloaded! Open WhatsApp and attach it manually to share.");
-        window.open("https://web.whatsapp.com/send", "_blank");
-    });
-});
+// document.getElementById("shareWhatsappBtn").addEventListener("click", () => {
+//     downloadInvoice(() => {
+//         alert("PDF downloaded! Open WhatsApp and attach it manually to share.");
+//         window.open("https://web.whatsapp.com/send", "_blank");
+//     });
+// });
 
 
 /* ============================================================
