@@ -484,6 +484,44 @@ saveInvoiceBtn.addEventListener('click', () => {
     document.getElementById('billingForm').style.display = 'none';
     document.getElementById('invoicePreview').style.display = 'block';
 
+     const invoiceData = {
+        invoiceNo: invoiceNumber.value,
+        dueDate: dueDate.value,
+        from: {
+            name: fromName.value,
+            phone: fromPhone.value,
+            email: fromEmail.value,
+            address: fromAddress.value
+        },
+        to: {
+            name: toName.value,
+            phone: toPhone.value,
+            email: toEmail.value,
+            address: toAddress.value
+        },
+        items: Array.from(tbody.querySelectorAll('tr')).map(r => ({
+            item: r.querySelector('.item').value,
+            price: r.querySelector('.price').value,
+            qty: r.querySelector('.qty').value,
+            discountType: r.querySelector('.discountType').value,
+            discount: r.querySelector('.discount').value,
+            amount: r.querySelector('.amount').value
+        })),
+        subtotal: subtotalEl.textContent,
+        discount: discountInput.value,
+        tax: taxInput.value,
+        shipping: shippingInput.value,
+        total: totalEl.textContent,
+        paymentMode: document.getElementById("paymentMode").value,
+        currency: document.getElementById("currency").value,
+        status: document.getElementById("paymentStatus").value,
+        dateSaved: new Date().toISOString()
+    };
+    // Save to localStorage
+    let allInvoices = JSON.parse(localStorage.getItem("allInvoices") || "[]");
+    allInvoices.push(invoiceData);
+    localStorage.setItem("allInvoices", JSON.stringify(allInvoices));
+
     document.getElementById('showInvoiceNo').textContent = invoiceNumber.value;
     document.getElementById('showDueDate').textContent = dueDate.value;
 
