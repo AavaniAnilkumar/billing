@@ -315,7 +315,7 @@ tr:nth-child(even) {
 <div class="table-wrapper">
 <table id="itemTable" style="display:none;">
 <thead>
-<tr><th>Item</th><th>Price</th><th>Qty</th><th>Discount Type</th><th>Discount</th><th>Tax</th><th>Amount</th></tr>
+<tr><th>Item</th><th>Price</th><th>Qty</th><th>Discount Type</th><th>Discount</th><th>Amount</th></tr>
 </thead>
 <tbody></tbody>
 </table>
@@ -366,7 +366,7 @@ tr:nth-child(even) {
 
 <div class="table-wrapper">
 <table id="invoiceTable">
-<thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Discount</th><th>Tax</th><th>Amount</th></tr></thead>
+<thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Discount</th><th>Amount</th></tr></thead>
 <tbody id="showItems"></tbody>
 </table>
 </div>
@@ -410,25 +410,30 @@ const tbody = table.querySelector('tbody');
 const subtotalEl = document.getElementById('subtotal');
 const totalEl = document.getElementById('total');
 const discountInput = document.getElementById('discountInput');
-const taxInput = document.getElementById('taxInput');
+// const taxInput = document.getElementById('taxInput');
 const shippingInput = document.getElementById('shippingInput');
 const saveInvoiceBtn = document.getElementById('saveInvoice');
 let subtotal = 0;
 
 addRowBtn.addEventListener('click', () => {
     table.style.display = 'table';
-    const row = document.createElement('tr');
-    row.innerHTML = `
-<td><input type="text" placeholder="Item"></td>
+   const row = document.createElement('tr');
+row.innerHTML = `
+<td><input type="text" class="item" placeholder="Item"></td>
 <td><input type="number" class="price" placeholder="0"></td>
 <td><input type="number" class="qty" value="1"></td>
-<td><select class="discountType"><option value="percentage">%</option><option value="fixed">₹</option></select></td>
+<td>
+    <select class="discountType">
+        <option value="percentage">%</option>
+        <option value="fixed">₹</option>
+    </select>
+</td>
 <td><input type="number" class="discount" value="0"></td>
-<td><input type="number" class="tax" value="0"></td>
-<td><input type="text" class="amount" readonly value="0.00"></td>`;
-    
-    tbody.appendChild(row);
-    row.querySelectorAll('input, select').forEach(i => i.addEventListener('input', calculateTotal));
+<td><input type="text" class="amount" readonly value="0.00"></td>
+`;
+tbody.appendChild(row);
+row.querySelectorAll('input, select').forEach(i => i.addEventListener('input', calculateTotal));
+
 });
 
 function calculateTotal() {
@@ -440,22 +445,24 @@ function calculateTotal() {
         let qty = parseFloat(row.querySelector('.qty').value) || 0;
         let discountType = row.querySelector('.discountType').value;
         let discount = parseFloat(row.querySelector('.discount').value) || 0;
-        let tax = parseFloat(row.querySelector('.tax').value) || 0;
 
-        let total = price * qty;
+        let amount = price * qty;
 
-        if (discountType === "percentage") total -= (total * discount) / 100;
-        else total -= discount;
+        // Apply row discount
+        if (discountType === "percentage") {
+            amount -= (amount * discount / 100);
+        } else {
+            amount -= discount;
+        }
 
-        total += (total * tax) / 100;
-
-        row.querySelector('.amount').value = total.toFixed(2);
-        subtotal += total;
+        row.querySelector('.amount').value = amount.toFixed(2);
+        subtotal += amount;
     });
 
     subtotalEl.textContent = subtotal.toFixed(2);
     updateGrandTotal();
 }
+
 
 function updateGrandTotal() {
     let discount = parseFloat(discountInput.value) || 0;
@@ -473,6 +480,7 @@ function updateGrandTotal() {
 ============================================================ */
 saveInvoiceBtn.addEventListener('click', () => {
 
+    incrementInvoiceNumber(); // <<< Add here (ONLY increments when saving)
     document.getElementById('billingForm').style.display = 'none';
     document.getElementById('invoicePreview').style.display = 'block';
 
@@ -489,18 +497,17 @@ saveInvoiceBtn.addEventListener('click', () => {
 
     const invoiceItems = document.getElementById('showItems');
     invoiceItems.innerHTML = "";
+tbody.querySelectorAll('tr').forEach(r => {
+    invoiceItems.innerHTML += `
+    <tr>
+        <td>${r.querySelector('.item').value}</td>
+        <td>${r.querySelector('.price').value}</td>
+        <td>${r.querySelector('.qty').value}</td>
+        <td>${r.querySelector('.discount').value} ${r.querySelector('.discountType').value === "percentage" ? "%" : "₹"}</td>
+        <td>${r.querySelector('.amount').value}</td>
+    </tr>`;
+});
 
-    tbody.querySelectorAll('tr').forEach(r => {
-        invoiceItems.innerHTML += `
-<tr>
-<td>${r.children[0].querySelector('input').value}</td>
-<td>${r.children[1].querySelector('input').value}</td>
-<td>${r.children[2].querySelector('input').value}</td>
-<td>${r.children[4].querySelector('input').value}</td>
-<td>${r.children[5].querySelector('input').value}</td>
-<td>${r.children[6].querySelector('input').value}</td>
-</tr>`;
-    });
 
     /* Create UPI QR */
     let amount = totalEl.textContent;
@@ -520,29 +527,28 @@ paymentStatus.addEventListener("change", () => {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 /* PDF export adjustments */
+/* A4 size fix for proper PDF alignment */
 #invoicePreview.pdf-export {
-    display: block;              /* block layout for PDF */
-    width: 1000px;               /* increased page width */
-    min-height: 1500px;          /* increased page height */
+    width: 794px !important;   /* A4 exact width for html2canvas */
+    padding: 20px 30px;
     margin: 0 auto;
-    padding: 20px 40px 50px 40px; /* top + bottom padding inside PDF */
+    background: white;
     box-sizing: border-box;
-    position: relative;
-    overflow: hidden;            /* prevent content from overflowing PDF */
 }
 
-/* Only adjust QR position for PDF - does NOT affect on-screen */
+
+
 #invoicePreview.pdf-export .qr-section {
-    position: relative;          /* normal flow inside PDF */
-    bottom: auto;                /* reset absolute positioning */
+    position: relative;          
+    bottom: auto;                
     left: auto;
     transform: none;
     text-align: center;
-    margin-top: 30px;            /* spacing from table/totals */
+    margin-top: 30px;            
 }
 
 #invoicePreview.pdf-export .qr-section img {
-    max-width: 200px;   /* keep QR fully visible */
+    max-width: 200px;   
     max-height: 200px;
     width: auto;
     height: auto;
@@ -583,15 +589,26 @@ function downloadInvoice(callback) {
     const invoice = document.getElementById("invoicePreview");
     document.querySelector(".download-print").style.display = "none";
 
-    const opt = {
-        margin: 10,
-        filename: "Invoice.pdf",
-        image: { type: "jpeg", quality: 1 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-        jsPDF: { unit: "px", format: [1000, 1500], orientation: "portrait" }
-    };
-
     invoice.classList.add("pdf-export");
+    let invoiceNo = document.getElementById("invoiceNumber").value;
+    let fileName=`SGK SOLUTIONS ${invoiceNo}.pdf`;
+
+    const opt = {
+        margin: 0,
+        filename: fileName,
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            letterRendering: true,
+            scrollY: 0
+        },
+        jsPDF: {
+            unit: "pt",
+            format: "a4",
+            orientation: "portrait"
+        }
+    };
 
     html2pdf()
         .set(opt)
@@ -600,7 +617,7 @@ function downloadInvoice(callback) {
         .then(() => {
             invoice.classList.remove("pdf-export");
             document.querySelector(".download-print").style.display = "flex";
-            if (callback) callback(); // call callback after PDF saved
+            if (callback) callback();
         });
 }
 
@@ -610,6 +627,37 @@ document.getElementById("shareWhatsappBtn").addEventListener("click", () => {
         alert("PDF downloaded! Open WhatsApp and attach it manually to share.");
         window.open("https://web.whatsapp.com/send", "_blank");
     });
+});
+
+
+/* ============================================================
+   INVOICE NUMBER HANDLING (Corrected)
+   - Does NOT increment on refresh
+   - Increments ONLY when clicking Save Invoice
+============================================================ */
+
+// Get invoice number without increasing
+function getInvoiceNumber() {
+    let num = localStorage.getItem("invoiceCounter");
+
+    if (!num) num = 1; // First ever invoice
+
+    return "INV-" + String(num).padStart(4, '0');
+}
+
+// Increase counter ONLY after saving invoice
+function incrementInvoiceNumber() {
+    let num = localStorage.getItem("invoiceCounter");
+
+    if (!num) num = 1;
+    else num = parseInt(num) + 1;
+
+    localStorage.setItem("invoiceCounter", num);
+}
+
+// Display invoice number on page load (NO increment)
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("invoiceNumber").value = getInvoiceNumber();
 });
 
 
