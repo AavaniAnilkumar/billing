@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SGK Solutions</title>
+
+<style>
+/* ---------- FONT ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+/* ---------- THEME COLORS ---------- */
+:root {
+  --emerald: #006A4E;
+  --emerald-light: #0B8A70;
+  --emerald-pale: #E8FFF7;
+  --emerald-border: #C4EDE1;
+}
+
+/* ---------- BACKGROUND ---------- */
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #e8fff3, #ffffff);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px 10px;
+  min-height: 100vh;
+}
+
+/* ---------- MAIN CONTAINER ---------- */
+.container {
+  width: 100%;
+  max-width: 1000px;
+  background: #fcfdf7;
+  border: 1px solid var(--emerald-border);
+  padding: 25px 35px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.container:hover {
+  transform: translateY(-3px);
+}
+
+/* ---------- HEADERS ---------- */
+h2 {
+  text-align: center;
+  color: var(--emerald);
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+h3 {
+  color: var(--emerald);
+  border-bottom: 2px solid var(--emerald);
+  padding-bottom: 5px;
+}
+
+/* ---------- FORM LABELS + INPUTS ---------- */
+label {
+  font-weight: 500;
+  color: #2d4b3f;
+  display: block;
+  margin-top: 10px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border: 1px solid var(--emerald-border);
+  border-radius: 10px;
+  background: #ffffff;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--emerald);
+  box-shadow: 0 0 6px rgba(0,106,78,0.3);
+}
+
+/* ---------- FLEX SECTIONS ---------- */
+.invoice-info, .bill-section, .bottom-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.invoice-info div, .bill-box, .left-options, .totals {
+  width: 48%;
+}
+
+/* ---------- BOXES ---------- */
+.bill-box {
+  background: var(--emerald-pale);
+  border: 1px solid var(--emerald-border);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+/* ---------- ADD ITEM ---------- */
+.add-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid var(--emerald);
+  padding-top: 10px;
+  margin-top: 25px;
+}
+
+/* ---------- BUTTONS ---------- */
+.add-item button,
+.save-btn button,
+.download-print button {
+  background: var(--emerald);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.add-item button:hover,
+.save-btn button:hover,
+.download-print button:hover {
+  background: var(--emerald-light);
+  transform: scale(1.05);
+}
+
+/* ---------- TABLE ---------- */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+  background: white;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid var(--emerald-border);
+  text-align: center;
+}
+
+th {
+  background: var(--emerald);
+  color: white;
+}
+
+tr:nth-child(even) {
+  background: #f6fffb;
+}
+
+.save-btn button {
+  width: 100%;
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+/* ---------- TOTALS ---------- */
+.summary {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.summary.total {
+  font-weight: bold;
+  color: var(--emerald);
+  border-top: 2px solid var(--emerald);
+  padding-top: 10px;
+  font-size: 18px;
+}
+
+/* ---------- INVOICE PREVIEW ---------- */
+#invoicePreview { display: none; }
+
+.invoice-header h1 {
+  color: var(--emerald);
+  font-size: 26px;
+}
+
+/* ---------- PARTY BOXES ---------- */
+.invoice-parties {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.invoice-box {
+  width: 45%;
+  background: var(--emerald-pale);
+  border: 1px solid var(--emerald-border);
+  border-radius: 12px;
+  padding: 10px 15px;
+}
+
+/* ---------- STATUS ---------- */
+.status-section {
+  display: flex;
+  justify-content: space-between;
+  background: var(--emerald-pale);
+  padding: 10px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+/* ---------- PAID STAMP ---------- */
+.paid-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 80px;
+  font-weight: 900;
+  color: rgba(0,106,78,0.2);
+  border: 8px solid rgba(0,106,78,0.4);
+  border-radius: 20px;
+  padding: 40px 80px;
+  display: none;
+  pointer-events: none;
+  z-index: 999;
+  text-transform: uppercase;
+}
+
+/* ---------- QR SECTION ---------- */
+.qr-section {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.qr-section img {
+  width: 230px;
+  height: 230px;
+  border-radius: 10px;
+  border: 3px solid var(--emerald-border);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .invoice-info div, .bill-box, .left-options, .totals, .invoice-box {
+    width: 100%;
+  }
+}
+
+@media print {
+  .download-print {
+    display: none !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ==========================================================
+                       BILLING FORM
+========================================================== -->
+<div class="container" id="billingForm">
+
+<div class="header-box" style="display:flex; align-items:center; gap:15px;">
+<img src="images/SGK LOGOOO.jpg" style="height:80px; width:80px; object-fit:contain;">
+<h2 style="margin:0;">SGK Solutions</h2>
+</div>
+
+<div class="invoice-info">
+  <div>
+    <label>Invoice Number:</label>
+    <input type="text" id="invoiceNumber">
+  </div>
+  <div>
+    <label>Due Date:</label>
+    <input type="date" id="dueDate">
+  </div>
+</div>
+
+<div class="bill-section">
+  <div class="bill-box">
+    <h3>Bill From</h3>
+    <input type="text" id="fromName" placeholder="Your Name" />
+    <input type="text" id="fromPhone" placeholder="Phone Number" />
+    <input type="email" id="fromEmail" placeholder="Email" />
+    <textarea id="fromAddress" placeholder="Address"></textarea>
+  </div>
+
+  <div class="bill-box">
+    <h3>Bill To</h3>
+    <input type="text" id="toName" placeholder="Client Name" />
+    <input type="text" id="toPhone" placeholder="Phone Number" />
+    <input type="email" id="toEmail" placeholder="Email" />
+    <textarea id="toAddress" placeholder="Address"></textarea>
+  </div>
+</div>
+
+<div class="add-item">
+  <h3>Add Items</h3>
+  <button id="addRow">➕ Add Item</button>
+</div>
+
+<div class="table-wrapper">
+<table id="itemTable" style="display:none;">
+<thead>
+<tr><th>Item</th><th>Price</th><th>Qty</th><th>Discount Type</th><th>Discount</th><th>Amount</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<div class="bottom-section">
+<div class="left-options">
+<label>Currency:</label>
+<select id="currency"><option value="INR">INR (₹)</option></select>
+
+<label>Payment Mode:</label>
+<select id="paymentMode"><option value="cash">Cash</option><option value="upi">UPI</option></select>
+
+<div class="save-btn">
+<button id="saveInvoice">💾 Save Invoice</button>
+</div>
+</div>
+
+<div class="totals">
+<div class="summary"><label>Subtotal:</label><span id="subtotal">0.00</span></div>
+<div class="summary"><label>Discount:</label><input type="number" id="discountInput" value="0" /></div>
+<div class="summary"><label>Tax:</label><input type="number" id="taxInput" value="0" /></div>
+<div class="summary"><label>Shipping:</label><input type="number" id="shippingInput" value="0" /></div>
+<div class="summary total"><label>Total:</label><span id="total">0.00</span></div>
+</div>
+</div>
+</div>
+
+
+
+<!-- ==========================================================
+                    INVOICE PREVIEW
+========================================================== -->
+<div class="container" id="invoicePreview">
+
+<div class="paid-stamp" id="paidStamp">PAID</div>
+
+<div class="invoice-header">
+<h1>Invoice Preview</h1>
+<p><strong>Invoice No:</strong> <span id="showInvoiceNo"></span></p>
+<p><strong>Due Date:</strong> <span id="showDueDate"></span></p>
+</div>
+
+<div class="invoice-parties">
+<div class="invoice-box"><h3>From</h3><p id="showFrom"></p></div>
+<div class="invoice-box"><h3>To</h3><p id="showTo"></p></div>
+</div>
+
+<div class="table-wrapper">
+<table id="invoiceTable">
+<thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Discount</th><th>Amount</th></tr></thead>
+<tbody id="showItems"></tbody>
+</table>
+</div>
+
+<div class="summary total" style="margin-top:20px;">
+<label>Total:</label><span id="showTotal">0.00</span>
+</div>
+
+<div class="qr-section">
+<h3>Scan & Pay</h3>
+<img id="upiQR" src="images/qr.jpeg">
+<p><strong>UPI ID:</strong> greeshmanr2255@oksbi</p>
+</div>
+
+<div class="status-section">
+<label>Status:</label>
+<select id="paymentStatus">
+<option value="unpaid">Unpaid</option>
+<option value="partially">Partially Paid</option>
+<option value="paid">Paid</option>
+</select>
+</div>
+
+<div class="download-print">
+<button onclick="window.print()">🖨️ Print</button>
+<button onclick="downloadInvoice()">⬇️ Download</button>
+<!-- <button id="shareWhatsappBtn">📤 Share on WhatsApp</button> -->
+
+
+</div>
+
+</div>
+
+<script>
+/* ============================================================
+   ADD ROW + CALCULATE TOTALS
+============================================================ */
+const addRowBtn = document.getElementById('addRow');
+const table = document.getElementById('itemTable');
+const tbody = table.querySelector('tbody');
+const subtotalEl = document.getElementById('subtotal');
+const totalEl = document.getElementById('total');
+const discountInput = document.getElementById('discountInput');
+// const taxInput = document.getElementById('taxInput');
+const shippingInput = document.getElementById('shippingInput');
+const saveInvoiceBtn = document.getElementById('saveInvoice');
+let subtotal = 0;
+
+addRowBtn.addEventListener('click', () => {
+    table.style.display = 'table';
+   const row = document.createElement('tr');
+row.innerHTML = `
+<td><input type="text" class="item" placeholder="Item"></td>
+<td><input type="number" class="price" placeholder="0"></td>
+<td><input type="number" class="qty" value="1"></td>
+<td>
+    <select class="discountType">
+        <option value="percentage">%</option>
+        <option value="fixed">₹</option>
+    </select>
+</td>
+<td><input type="number" class="discount" value="0"></td>
+<td><input type="text" class="amount" readonly value="0.00"></td>
+`;
+tbody.appendChild(row);
+row.querySelectorAll('input, select').forEach(i => i.addEventListener('input', calculateTotal));
+
+});
+
+function calculateTotal() {
+    let rows = tbody.querySelectorAll('tr');
+    subtotal = 0;
+
+    rows.forEach(row => {
+        let price = parseFloat(row.querySelector('.price').value) || 0;
+        let qty = parseFloat(row.querySelector('.qty').value) || 0;
+        let discountType = row.querySelector('.discountType').value;
+        let discount = parseFloat(row.querySelector('.discount').value) || 0;
+
+        let amount = price * qty;
+
+        // Apply row discount
+        if (discountType === "percentage") {
+            amount -= (amount * discount / 100);
+        } else {
+            amount -= discount;
+        }
+
+        row.querySelector('.amount').value = amount.toFixed(2);
+        subtotal += amount;
+    });
+
+    subtotalEl.textContent = subtotal.toFixed(2);
+    updateGrandTotal();
+}
+
+
+function updateGrandTotal() {
+    let discount = parseFloat(discountInput.value) || 0;
+    let tax = parseFloat(taxInput.value) || 0;
+    let shipping = parseFloat(shippingInput.value) || 0;
+
+    let total = subtotal - discount + tax + shipping;
+    totalEl.textContent = total.toFixed(2);
+}
+
+[discountInput, taxInput, shippingInput].forEach(el => el.addEventListener('input', updateGrandTotal));
+
+/* ============================================================
+                   SAVE INVOICE & SHOW PREVIEW
+============================================================ */
+saveInvoiceBtn.addEventListener('click', () => {
+
+    incrementInvoiceNumber(); // <<< Add here (ONLY increments when saving)
+    document.getElementById('billingForm').style.display = 'none';
+    document.getElementById('invoicePreview').style.display = 'block';
+
+     const invoiceData = {
+        invoiceNo: invoiceNumber.value,
+        dueDate: dueDate.value,
+        from: {
+            name: fromName.value,
+            phone: fromPhone.value,
+            email: fromEmail.value,
+            address: fromAddress.value
+        },
+        to: {
+            name: toName.value,
+            phone: toPhone.value,
+            email: toEmail.value,
+            address: toAddress.value
+        },
+        items: Array.from(tbody.querySelectorAll('tr')).map(r => ({
+            item: r.querySelector('.item').value,
+            price: r.querySelector('.price').value,
+            qty: r.querySelector('.qty').value,
+            discountType: r.querySelector('.discountType').value,
+            discount: r.querySelector('.discount').value,
+            amount: r.querySelector('.amount').value
+        })),
+        subtotal: subtotalEl.textContent,
+        discount: discountInput.value,
+        tax: taxInput.value,
+        shipping: shippingInput.value,
+        total: totalEl.textContent,
+        paymentMode: document.getElementById("paymentMode").value,
+        currency: document.getElementById("currency").value,
+        status: document.getElementById("paymentStatus").value,
+        dateSaved: new Date().toISOString()
+    };
+    // Save to localStorage
+    let allInvoices = JSON.parse(localStorage.getItem("allInvoices") || "[]");
+    allInvoices.push(invoiceData);
+    localStorage.setItem("allInvoices", JSON.stringify(allInvoices));
+
+    document.getElementById('showInvoiceNo').textContent = invoiceNumber.value;
+    document.getElementById('showDueDate').textContent = dueDate.value;
+
+    document.getElementById('showFrom').innerHTML =
+        `<strong>${fromName.value}</strong><br>${fromPhone.value}<br>${fromEmail.value}<br>${fromAddress.value}`;
+
+    document.getElementById('showTo').innerHTML =
+        `<strong>${toName.value}</strong><br>${toPhone.value}<br>${toEmail.value}<br>${toAddress.value}`;
+
+    document.getElementById('showTotal').textContent = totalEl.textContent;
+
+    const invoiceItems = document.getElementById('showItems');
+    invoiceItems.innerHTML = "";
+tbody.querySelectorAll('tr').forEach(r => {
+    invoiceItems.innerHTML += `
+    <tr>
+        <td>${r.querySelector('.item').value}</td>
+        <td>${r.querySelector('.price').value}</td>
+        <td>${r.querySelector('.qty').value}</td>
+        <td>${r.querySelector('.discount').value} ${r.querySelector('.discountType').value === "percentage" ? "%" : "₹"}</td>
+        <td>${r.querySelector('.amount').value}</td>
+    </tr>`;
+});
+
+
+    /* Create UPI QR */
+    let amount = totalEl.textContent;
+    let upiID = "greeshmanr2255@oksbi";
+    let upiURL = `upi://pay?pa=${upiID}&pn=SGK%20Solutions&am=${amount}&cu=INR`;
+    let qrAPI = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiURL)}`;
+    document.getElementById("upiQR").src = qrAPI;
+});
+
+/* ===== Paid Stamp ===== */
+paymentStatus.addEventListener("change", () => {
+    paidStamp.style.display = paymentStatus.value === "paid" ? "block" : "none";
+});
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+/* PDF export adjustments */
+/* A4 size fix for proper PDF alignment */
+#invoicePreview.pdf-export {
+    width: 794px !important;   /* A4 exact width for html2canvas */
+    padding: 20px 30px;
+    margin: 0 auto;
+    background: white;
+    box-sizing: border-box;
+}
+
+
+
+#invoicePreview.pdf-export .qr-section {
+    position: relative;          
+    bottom: auto;                
+    left: auto;
+    transform: none;
+    text-align: center;
+    margin-top: 30px;            
+}
+
+#invoicePreview.pdf-export .qr-section img {
+    max-width: 200px;   
+    max-height: 200px;
+    width: auto;
+    height: auto;
+}
+
+.pdf-hide{
+  display: none !important;
+}
+
+
+</style>
+
+<script>
+// function downloadInvoice() {
+//     const invoice = document.getElementById("invoicePreview");
+
+//     // Hide buttons
+//     document.querySelector(".download-print").style.display = "none";
+
+//    const opt = {
+//     margin: 10,
+//     filename: "Invoice.pdf",
+//     image: { type: "jpeg", quality: 1 },
+//     html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+//     jsPDF: { unit: "px", format: [1000, 1500], orientation: "portrait" }
+// };
+
+
+
+//     invoice.classList.add("pdf-export");
+
+//     html2pdf()
+//         .set(opt)
+//         .from(invoice)
+//         .save()
+//         .then(() => {
+//             invoice.classList.remove("pdf-export");
+//             document.querySelector(".download-print").style.display = "flex";
+//         });
+// }
+function downloadInvoice(callback) {
+    const invoice = document.getElementById("invoicePreview");
+    const qrSection = document.querySelector(".qr-section");
+    const statusSection = document.querySelector(".status-section");
+
+    // Hide sections
+    qrSection.classList.add("pdf-hide");
+    statusSection.classList.add("pdf-hide");
+    document.querySelector(".download-print").style.display = "none";
+
+    invoice.classList.add("pdf-export");
+    let invoiceNo = document.getElementById("invoiceNumber").value;
+    let fileName=`SGK SOLUTIONS ${invoiceNo}.pdf`;
+
+    const opt = {
+        margin: 0,
+        filename: fileName,
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            letterRendering: true,
+            scrollY: 0
+        },
+        jsPDF: {
+            unit: "pt",
+            format: "a4",
+            orientation: "portrait"
+        }
+    };
+
+    html2pdf()
+        .set(opt)
+        .from(invoice)
+        .save()
+        .then(() => {
+            invoice.classList.remove("pdf-export");
+            // Show sections again after export
+            qrSection.classList.remove("pdf-hide");
+            statusSection.classList.remove("pdf-hide");
+            document.querySelector(".download-print").style.display = "flex";
+            if (callback) callback();
+        });
+}
+
+// Share button functionality
+// document.getElementById("shareWhatsappBtn").addEventListener("click", () => {
+//     downloadInvoice(() => {
+//         alert("PDF downloaded! Open WhatsApp and attach it manually to share.");
+//         window.open("https://web.whatsapp.com/send", "_blank");
+//     });
+// });
+
+
+/* ============================================================
+   INVOICE NUMBER HANDLING (Corrected)
+   - Does NOT increment on refresh
+   - Increments ONLY when clicking Save Invoice
+============================================================ */
+
+// Get invoice number without increasing
+function getInvoiceNumber() {
+    let num = localStorage.getItem("invoiceCounter");
+
+    if (!num) num = 1; // First ever invoice
+
+    return "INV-" + String(num).padStart(4, '0');
+}
+
+// Increase counter ONLY after saving invoice
+function incrementInvoiceNumber() {
+    let num = localStorage.getItem("invoiceCounter");
+
+    if (!num) num = 1;
+    else num = parseInt(num) + 1;
+
+    localStorage.setItem("invoiceCounter", num);
+}
+
+// Display invoice number on page load (NO increment)
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("invoiceNumber").value = getInvoiceNumber();
+});
+
+
+</script>
+
+
+</body>
+</html>
